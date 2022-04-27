@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :baria_user, only:[:edit]
+
   def index
     @users = User.all
     @user = current_user
@@ -21,12 +23,19 @@ class UsersController < ApplicationController
       flash[:notice] = "successfully updated"
       redirect_to user_path(@user.id)
     else
-      render:index
+      render:edit
     end
   end
 
   private
   def user_params
-    params.require(:user).permit(:title, :body, :profile_image)
+    params.require(:user).permit(:name, :introduction, :profile_image)
   end
+  
+  def baria_user
+    unless params[:id].to_i == current_user.id
+      redirect_to user_path(current_user)
+    end
+  end
+
 end
